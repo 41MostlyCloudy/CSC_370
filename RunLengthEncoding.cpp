@@ -13,15 +13,20 @@ string RunLengthEncode(string inputString)
     char lastChar = '\0'; // The previously encountered char.
     int repeats = 0; // The number of times the last character has repeated.
 
-    for (int i = 0; i < inputString.length(); i++)
+    for (int i = 0; i < inputString.length() + 1; i++)
     {
-        if (includedCharacters.find(inputString.at(i), 0) < includedCharacters.length()) // Include only specified characters.
+        char currentChar = '\0';
+        if (i < inputString.length())
+            currentChar = inputString.at(i);
+
+        if (includedCharacters.find(currentChar, 0) <= includedCharacters.length() || currentChar == '\0') // Include only specified characters.
         {
-            if (inputString.at(i) == lastChar && i < inputString.length() - 1 && repeats < 98) // Add to repeated character number. This cannot be done with the last char or one that would overflow the repeats.
+            if (currentChar == lastChar && repeats < 98) // Add to repeated character number. This cannot be done with the last char or one that would overflow the repeats.
                 repeats++;
             else
             {
                 repeats++;
+
                 if (repeats > 4) // Endode repeated numbers.
                 {
                     result += '/';
@@ -33,10 +38,10 @@ string RunLengthEncode(string inputString)
                 else // Add non-repeating numbers
                 {
                     for (int j = 0; j < repeats; j++)
-                        result += inputString.at(i);
+                        result += lastChar;
                 }
                 repeats = 0;
-                lastChar = inputString.at(i);
+                lastChar = currentChar;
             }
         }
     }
@@ -47,7 +52,7 @@ string RunLengthEncode(string inputString)
 
 int main(void)
 {
-    cout << RunLengthEncode("bbbbbabwwwwdtryrddddddddd%%%%%%%%%%%%%%%%ddddqqqqaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaetg");
+    cout << RunLengthEncode("bbbbbabwwwwdtryrddddddddd%%%%%%%%%%%%%%%%ddddqqqqaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaetggggggg");
 
     return 0;
 }
